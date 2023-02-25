@@ -1,11 +1,8 @@
 # Echo Etag Middleware
 
-<!-- [![Build Status](https://travis-ci.org/foolin/echo-etag.svg?branch=master)](https://travis-ci.org/foolin/echo-etag)
-[![Go Report Card](https://goreportcard.com/badge/github.com/pablor21/echo-etag)](https://goreportcard.com/report/github.com/pablor21/echo-etag)
 [![GoDoc](https://godoc.org/github.com/pablor21/echo-etag?status.svg)](https://godoc.org/github.com/pablor21/echo-etag)
-[![codecov](https://codecov.io/gh/foolin/echo-etag/branch/master/graph/badge.svg)](https://codecov.io/gh/foolin/echo-etag)
-[![GitHub release](https://img.shields.io/github/release/foolin/echo-etag.svg)](https://img.shields.io/github/release/foolin/echo-etag.svg)
-[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/foolin/echo-etag/master/LICENSE) -->
+[![GitHub release](https://img.shields.io/github/release/pablor21/echo-etag.svg)](https://img.shields.io/github/release/pablor21/echo-etag.svg)
+[![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/pablor21/echo-etag/master/LICENSE)
 
 
 Etag middleware for Echo Framework
@@ -35,7 +32,7 @@ package main
 
 import (
     "github.com/labstack/echo/v4"
-    "github.com/pablor21/echo-etag/v4"
+    etag "github.com/pablor21/echo-etag/v4"
 )
 
 func main() {
@@ -56,7 +53,7 @@ package main
 
 import (
     "github.com/labstack/echo/v4"
-    "github.com/pablor21/echo-etag/v4"
+    etag "github.com/pablor21/echo-etag/v4"
 )
 
 func main() {
@@ -83,7 +80,7 @@ package main
 import (
     "crypto/md5"
     "github.com/labstack/echo/v4"
-    "github.com/pablor21/echo-etag/v4"
+    etag "github.com/pablor21/echo-etag/v4"
 )
 
 func main() {
@@ -95,7 +92,7 @@ func main() {
             return c.Path() == "/skip"
         },
         Weak: true,
-        HashFn: func(config EtagConfig) hash.Hash {
+        HashFn: func(config etag.EtagConfig) hash.Hash {
             return md5.New() //use md5 hash
 		},
     }))
