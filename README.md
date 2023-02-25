@@ -87,12 +87,12 @@ func main() {
     e := echo.New()
 
     //Etag middleware
-    e.Use(etag.EtagWithConfig(etag.Config{
+    e.Use(etag.WithConfig(etag.Config{
         Skipper: func(c echo.Context) bool {
             return c.Path() == "/skip"
         },
         Weak: true,
-        HashFn: func(config etag.EtagConfig) hash.Hash {
+        HashFn: func(config etag.Config) hash.Hash {
             return md5.New() //use md5 hash
 		},
     }))
