@@ -15,30 +15,29 @@ import (
 )
 
 type (
-	// EtagConfig defines the config for Etag middleware.
-	EtagConfig struct {
+	// Config defines the config for Etag middleware.
+	Config struct {
 		// Skipper defines a function to skip middleware.
 		Skipper middleware.Skipper
 		// Weak defines if the Etag is weak or strong.
 		Weak bool
 		// HashFn defines the hash function to use. Default is crc32q.
-		HashFn func(config EtagConfig) hash.Hash
+		HashFn func(config Config) hash.Hash
 	}
 )
 
 var (
 	// DefaultEtagConfig is the default Etag middleware config.
-	DefaultEtagConfig = EtagConfig{
+	DefaultEtagConfig = Config{
 		Skipper: middleware.DefaultSkipper,
 		Weak:    true,
-		HashFn: func(config EtagConfig) hash.Hash {
+		HashFn: func(config Config) hash.Hash {
 			if config.Weak {
 				const crcPol = 0xD5828281
 				crc32qTable := crc32.MakeTable(crcPol)
 				return crc32.New(crc32qTable)
-			} else {
-				return sha1.New()
 			}
+			return sha1.New()
 		},
 	}
 	normalizedETagName        = http.CanonicalHeaderKey("Etag")
@@ -49,11 +48,11 @@ var (
 // Etag returns a Etag middleware.
 func Etag() echo.MiddlewareFunc {
 	c := DefaultEtagConfig
-	return EtagWithConfig(c)
+	return WithConfig(c)
 }
 
-// EtagWithConfig returns a Etag middleware with config.
-func EtagWithConfig(config EtagConfig) echo.MiddlewareFunc {
+// WithConfig returns a Etag middleware with config.
+func WithConfig(config Config) echo.MiddlewareFunc {
 
 	if config.Skipper == nil {
 		config.Skipper = DefaultEtagConfig.Skipper
