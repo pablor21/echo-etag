@@ -42,3 +42,9 @@ jobs:
           go version
           go install golang.org/x/vuln/cmd/govulncheck@latest
           govulncheck ./...
+      - name: Run go vet
+        run: |
+          go vet ./...
+      - name: Run go test
+        run: |
+          go test -v ./...
