@@ -1,4 +1,4 @@
-module github.com/pablor21/echo-etag/v4
+module github.com/pablor21/echotag/v4
 
 go 1.19
 

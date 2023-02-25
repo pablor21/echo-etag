@@ -25,7 +25,7 @@ Etag middleware for Echo Framework
 ## Installation
 
 ```bash
-$ go get github.com/pablor21/echo-etag
+$ go get github.com/pablor21/echo-etag/v4
 ```
 
 ## Usage
