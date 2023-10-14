@@ -1,6 +1,6 @@
 # Echo Etag Middleware
 
-[![GoDoc][(https://godoc.org/github.com/pablor21/echo-etag?status.svg)](https://godoc.org/github.com/pablor21/echo-etag)](https://pkg.go.dev/github.com/pablor21/echo-etag/v4)
+[![GoDoc](https://godoc.org/github.com/pablor21/echo-etag/v4?status.svg)](https://godoc.org/github.com/pablor21/echo-etag/v4)
 [![GitHub release](https://img.shields.io/github/release/pablor21/echo-etag.svg)](https://img.shields.io/github/release/pablor21/echo-etag.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/pablor21/echo-etag/master/LICENSE)
 
