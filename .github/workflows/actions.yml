@@ -1,9 +1,13 @@
 name: Auto Release Go Package
 
+
 on:
   push:
     branches:
       - main
+      
+permissions:
+  contents: write
 
 jobs:
   tag-and-release:
