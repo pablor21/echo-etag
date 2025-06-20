@@ -9,8 +9,8 @@ import (
 	etag "github.com/pablor21/echo-etag/v4"
 )
 
-var testWeakEtag = "W/11-8dcfee46"
-var testStrEtag = "11-0a4d55a8d778e5022fab701977c5d840bbc486d0"
+var testWeakEtag = "W/\"11-8dcfee46\""
+var testStrEtag = "\"11-0a4d55a8d778e5022fab701977c5d840bbc486d0\""
 var e *echo.Echo
 
 func init() {
