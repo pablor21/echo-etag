@@ -26,17 +26,30 @@ jobs:
       - name: List existing tags
         run: git tag
 
-      - name: Determine next version
-        id: version
+      - name: Get latest version tag from remote
+        id: get_version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)
+          echo "Fetching latest remote tag..."
+          latest_tag=$(git ls-remote --tags origin \
+            | grep -o 'refs/tags/v[0-9]\+\.[0-9]\+\.[0-9]\+$' \
+            | sed 's#refs/tags/##' \
+            | sort -Vr \
+            | head -n 1)
+
+          latest_tag=${latest_tag:-v0.0.0}
           echo "Latest tag: $latest_tag"
-          version=$(echo $latest_tag | sed -E 's/^v//')
+
+          version="${latest_tag#v}"
           IFS='.' read -r major minor patch <<< "$version"
+          major=${major:-0}
+          minor=${minor:-0}
+          patch=${patch:-0}
+
           next_patch=$((patch + 1))
           next_version="v$major.$minor.$next_patch"
-          echo "Next version: $next_version"
-          echo "tag=$next_version" >> $GITHUB_OUTPUT
+          echo "Next version: $next_version" 
+          
+          echo "tag=$next_version" >> "$GITHUB_OUTPUT"
 
       - name: Create and push new tag
         run: |
