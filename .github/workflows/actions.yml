@@ -1,30 +1,42 @@
-name: Publish Go Package
+name: Auto Release Go Package
 
 on:
   push:
     branches:
       - main
-    tags:
-      - 'v*.*.*'  
 
 jobs:
-  publish:
+  tag-and-release:
     runs-on: ubuntu-latest
+
     steps:
-      - uses: actions/checkout@v4
+      - name: Checkout code
+        uses: actions/checkout@v4
 
-      - name: Set up Go
-        uses: actions/setup-go@v5
+      - name: Set up Git
+        run: |
+          git config user.name "github-actions[bot]"
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+
+      - name: Fetch all tags
+        run: git fetch --tags
+
+      - name: Determine next version
+        id: version
+        run: |
+          latest_tag=$(git describe --tags --abbrev=0 || echo v0.0.0)
+          echo "Latest tag: $latest_tag"
+          version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF += 1; print}')
+          echo "Next version: $version"
+          echo "tag=$version" >> $GITHUB_OUTPUT
+
+      - name: Tag and push
+        run: |
+          git tag ${{ steps.version.outputs.tag }}
+          git push origin ${{ steps.version.outputs.tag }}
+
+      - name: Create GitHub Release
+        uses: softprops/action-gh-release@v1
         with:
-          go-version: '1.24'  
-
-      - name: Build and Test
-        run: |
-          go mod tidy
-          go test ./...
-
-      - name: Publish to Go Proxy (on tag push)
-        if: startsWith(github.ref, 'refs/tags/v')
-        run: |
-          export GOPROXY=https://proxy.golang.org
-          go list -m all  
+          tag_name: ${{ steps.version.outputs.tag }}
+          generate_release_notes: true
