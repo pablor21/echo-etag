@@ -23,7 +23,7 @@ jobs:
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Debug: List existing tags
+      - name: List existing tags
         run: git tag
 
       - name: Determine next version
