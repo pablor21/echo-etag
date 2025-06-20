@@ -99,7 +99,7 @@ func WithConfig(config Config) echo.MiddlewareFunc {
 				return
 			}
 
-			etag := fmt.Sprintf("%v-%v", strconv.Itoa(hw.len),
+			etag := fmt.Sprintf("\"%v-%v\"", strconv.Itoa(hw.len),
 				hex.EncodeToString(hw.hash.Sum(nil)))
 
 			if config.Weak {
