@@ -1,11 +1,10 @@
-name: Auto Release Go Package
-
+name: Auto Release Go Module
 
 on:
   push:
     branches:
       - main
-      
+
 permissions:
   contents: write
 
@@ -14,27 +13,32 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - name: Checkout code
+      - name: Checkout code with full history
         uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Important: fetch full history and tags
 
-      - name: Set up Git
+      - name: Set up Git user
         run: |
           git config user.name "github-actions[bot]"
           git config user.email "github-actions[bot]@users.noreply.github.com"
 
-      - name: Fetch all tags
-        run: git fetch --tags
+      - name: Debug: List existing tags
+        run: git tag
 
       - name: Determine next version
         id: version
         run: |
-          latest_tag=$(git describe --tags --abbrev=0 || echo v0.0.0)
+          latest_tag=$(git describe --tags --abbrev=0 2>/dev/null || echo v0.0.0)
           echo "Latest tag: $latest_tag"
-          version=$(echo $latest_tag | awk -F. -v OFS=. '{$NF += 1; print}')
-          echo "Next version: $version"
-          echo "tag=$version" >> $GITHUB_OUTPUT
+          version=$(echo $latest_tag | sed -E 's/^v//')
+          IFS='.' read -r major minor patch <<< "$version"
+          next_patch=$((patch + 1))
+          next_version="v$major.$minor.$next_patch"
+          echo "Next version: $next_version"
+          echo "tag=$next_version" >> $GITHUB_OUTPUT
 
-      - name: Tag and push
+      - name: Create and push new tag
         run: |
           git tag ${{ steps.version.outputs.tag }}
           git push origin ${{ steps.version.outputs.tag }}
