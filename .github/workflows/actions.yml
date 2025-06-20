@@ -26,8 +26,8 @@ jobs:
       - name: List existing tags
         run: git tag
 
-      - name: Get latest version tag from remote
-        id: get_version
+      - name: Determine next version
+        id: version
         run: |
           echo "Fetching latest remote tag..."
           latest_tag=$(git ls-remote --tags origin \
