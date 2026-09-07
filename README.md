@@ -1,6 +1,6 @@
 # Echo Etag Middleware
 
-[![GoDoc](https://godoc.org/github.com/pablor21/echo-etag/v4?status.svg)](https://godoc.org/github.com/pablor21/echo-etag/v4)
+[![GoDoc](https://godoc.org/github.com/pablor21/echo-etag/v5?status.svg)](https://godoc.org/github.com/pablor21/echo-etag/v5)
 [![GitHub release](https://img.shields.io/github/release/pablor21/echo-etag.svg)](https://img.shields.io/github/release/pablor21/echo-etag.svg)
 [![GitHub license](https://img.shields.io/badge/license-MIT-blue.svg)](https://raw.githubusercontent.com/pablor21/echo-etag/master/LICENSE)
 
@@ -19,10 +19,17 @@ Etag middleware for Echo Framework
 
 
 
+## Version compatibility
+
+| echo-etag | Echo | Branch |
+| --------- | ---- | ------ |
+| `v5.x`    | `github.com/labstack/echo/v5` | `main` |
+| `v4.x`    | `github.com/labstack/echo/v4` | `v4`   |
+
 ## Installation
 
 ```bash
-$ go get github.com/pablor21/echo-etag/v4
+$ go get github.com/pablor21/echo-etag/v5
 ```
 
 ## Usage
@@ -31,8 +38,8 @@ $ go get github.com/pablor21/echo-etag/v4
 package main
 
 import (
-    "github.com/labstack/echo/v4"
-    etag "github.com/pablor21/echo-etag/v4"
+    "github.com/labstack/echo/v5"
+    etag "github.com/pablor21/echo-etag/v5"
 )
 
 func main() {
@@ -52,8 +59,8 @@ func main() {
 package main
 
 import (
-    "github.com/labstack/echo/v4"
-    etag "github.com/pablor21/echo-etag/v4"
+    "github.com/labstack/echo/v5"
+    etag "github.com/pablor21/echo-etag/v5"
 )
 
 func main() {
@@ -62,7 +69,7 @@ func main() {
     //Etag middleware
     e.Use(etag.Etag())
 
-    e.GET("/", func(c echo.Context) error {
+    e.GET("/", func(c *echo.Context) error {
         return c.String(200, "Hello, World!")
     })
 
@@ -79,8 +86,8 @@ package main
 
 import (
     "crypto/md5"
-    "github.com/labstack/echo/v4"
-    etag "github.com/pablor21/echo-etag/v4"
+    "github.com/labstack/echo/v5"
+    etag "github.com/pablor21/echo-etag/v5"
 )
 
 func main() {
@@ -88,7 +95,7 @@ func main() {
 
     //Etag middleware
     e.Use(etag.WithConfig(etag.Config{
-        Skipper: func(c echo.Context) bool {
+        Skipper: func(c *echo.Context) bool {
             return c.Path() == "/skip"
         },
         Weak: true,
@@ -97,7 +104,7 @@ func main() {
 		},
     }))
 
-    e.GET("/", func(c echo.Context) error {
+    e.GET("/", func(c *echo.Context) error {
         return c.String(200, "Hello, World!")
     })
 
