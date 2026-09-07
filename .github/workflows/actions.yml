@@ -4,6 +4,7 @@ on:
   push:
     branches:
       - main
+      - v4
 
 permissions:
   contents: write
@@ -29,26 +30,28 @@ jobs:
       - name: Determine next version
         id: version
         run: |
-          echo "Fetching latest remote tag..."
+          # The major version is owned by the module path, so each branch releases on its own
+          # major line: main -> v5.x.y, the v4 maintenance branch -> v4.x.y.
+          major=$(sed -n 's#^module .*/v\([0-9][0-9]*\)$#\1#p' go.mod)
+          major=${major:-1}
+          echo "Module major version: v$major"
+
+          echo "Fetching latest remote tag for v$major..."
           latest_tag=$(git ls-remote --tags origin \
-            | grep -o 'refs/tags/v[0-9]\+\.[0-9]\+\.[0-9]\+$' \
+            | grep -o "refs/tags/v${major}\.[0-9]\+\.[0-9]\+$" \
             | sed 's#refs/tags/##' \
             | sort -Vr \
             | head -n 1)
 
-          latest_tag=${latest_tag:-v0.0.0}
-          echo "Latest tag: $latest_tag"
+          if [ -z "$latest_tag" ]; then
+            next_version="v${major}.0.0"
+          else
+            echo "Latest tag: $latest_tag"
+            IFS='.' read -r _ minor patch <<< "${latest_tag#v}"
+            next_version="v${major}.${minor}.$((patch + 1))"
+          fi
+          echo "Next version: $next_version"
 
-          version="${latest_tag#v}"
-          IFS='.' read -r major minor patch <<< "$version"
-          major=${major:-0}
-          minor=${minor:-0}
-          patch=${patch:-0}
-
-          next_patch=$((patch + 1))
-          next_version="v$major.$minor.$next_patch"
-          echo "Next version: $next_version" 
-          
           echo "tag=$next_version" >> "$GITHUB_OUTPUT"
 
       - name: Create and push new tag
